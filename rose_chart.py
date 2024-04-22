@@ -8,6 +8,8 @@ df["created_at"] = pd.to_datetime(df["created_at"])
 df["hour"] = df["created_at"].dt.hour
 
 hour_counts = df["hour"].value_counts().sort_index()
+all_hours = pd.Series(index=np.arange(24), data=0)  
+hour_counts = hour_counts.reindex(all_hours.index, fill_value=0) 
 
 values = (hour_counts / hour_counts.max()).tolist()
 values += values[:1]
@@ -36,7 +38,7 @@ bars = ax.bar(
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xticks(angles[:-1])
-ax.set_xticklabels([f"{h}:00" for h in range(n_points)], color="black", size=12)
+ax.set_xticklabels([f"{h}:00" for h in range(24)], color="black", size=12)
 
 for bar, height in zip(bars, hour_counts):
     ax.text(
